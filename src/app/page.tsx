@@ -5,14 +5,12 @@ import { InstagramIcon, YoutubeIcon } from "@/components/SocialIcons";
 import {
   Mail,
   MapPin,
-  Camera,
   Layers,
   CheckCircle,
   Cpu,
   Tv,
   ExternalLink,
 } from "lucide-react";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -297,16 +295,37 @@ export default async function HomePage() {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-zinc-900 dark:text-white font-black tracking-wider uppercase text-xs">Admin Controls</h4>
+            <h4 className="text-zinc-900 dark:text-white font-black tracking-wider uppercase text-xs">Get In Touch</h4>
             <p className="text-xs text-zinc-500 leading-relaxed">
-              Replace biography details, gear setup, change headers, and replace portfolio photos/videos in real-time.
+              Interested in collaboration, licensing footage, or discussing conservation projects? I&apos;d love to hear from you.
             </p>
-            <Link
-              href="/dashboard"
-              className="inline-block text-xs bg-zinc-200 dark:bg-zinc-900 hover:bg-zinc-300 dark:hover:bg-zinc-800 text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-bold px-4 py-2.5 rounded-xl transition-all border border-zinc-300 dark:border-zinc-800"
-            >
-              Enter Control Dashboard &rarr;
-            </Link>
+            <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="w-full bg-zinc-200 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required
+              />
+              <input
+                type="email"
+                placeholder="Your Email"
+                className="w-full bg-zinc-200 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required
+              />
+              <textarea
+                rows={3}
+                placeholder="Your Message"
+                className="w-full bg-zinc-200 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-900 dark:text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-lg transition-all text-xs flex items-center justify-center gap-2"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                Send Message
+              </button>
+            </form>
           </div>
 
         </div>
