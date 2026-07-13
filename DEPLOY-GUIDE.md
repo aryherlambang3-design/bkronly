@@ -44,8 +44,9 @@ git push -f origin main
 ### B. Configure Project
 Vercel akan auto-detect Next.js settings. **JANGAN klik Deploy dulu!**
 
-### C. Add Environment Variables ⚠️ PENTING
-**Sebelum deploy, tambahkan DATABASE_URL:**
+### C. Add Environment Variables ⚠️ WAJIB - HARUS DILAKUKAN!
+
+**DATABASE_URL harus di-set sebelum deploy, jika tidak build akan gagal!**
 
 1. Di halaman import, scroll ke **"Environment Variables"**
 2. Tambahkan variable:
@@ -56,6 +57,8 @@ Vercel akan auto-detect Next.js settings. **JANGAN klik Deploy dulu!**
      ```
    - **Environment**: Pilih semua (Production, Preview, Development)
 3. Klik **"Add"**
+
+⚠️ **PENTING**: Jangan skip step ini! Tanpa DATABASE_URL, build akan gagal dengan error "DATABASE_URL is required".
 
 ### D. Deploy
 Klik **"Deploy"** button
@@ -87,14 +90,25 @@ Tunggu 2-3 menit sampai build selesai.
 
 ### ❌ Error: "DATABASE_URL is required"
 
-**Cause**: Environment variable tidak di-set di Vercel
+**Cause**: Environment variable tidak di-set di Vercel **SEBELUM** deploy pertama kali
 
 **Solution**:
 1. Go to Vercel Dashboard
 2. Select your project
 3. Go to **Settings** → **Environment Variables**
-4. Add `DATABASE_URL` dengan value dari `.env.local`
-5. Go to **Deployments** → Click **"..."** → **"Redeploy"**
+4. Add `DATABASE_URL` dengan value dari `.env.local`:
+   ```
+   postgresql://neondb_owner:npg_OsUxW5ReXHQ1@ep-holy-hat-ao6p5pvi.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+   ```
+5. Environment: Pilih **Production, Preview, Development** (semua)
+6. Klik **Save**
+7. Go to **Deployments** → Click latest failed deployment → Click **"..."** → **"Redeploy"**
+
+### ❌ Error: "e.db.insert is not a function"
+
+**Cause**: DATABASE_URL tidak ada saat build, menyebabkan db object invalid
+
+**Solution**: Sama seperti di atas - pastikan DATABASE_URL di-set di Vercel Environment Variables, lalu redeploy.
 
 ### ❌ Error: "Build failed"
 
