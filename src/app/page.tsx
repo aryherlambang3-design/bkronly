@@ -22,14 +22,14 @@ export default async function HomePage() {
   const rawItems = await getPortfolioItems();
 
   // Convert Date objects to serialize properly or make sure they match
-  const items = rawItems.map((item) => ({
+  const items = rawItems.map((item: any) => ({
     ...item,
     createdAt: new Date(item.createdAt),
   }));
 
   // Parse gear list into array
   const gearArray = profile.gearList
-    ? profile.gearList.split("\n").filter((g) => g.trim() !== "")
+    ? profile.gearList.split("\n").filter((g: string) => g.trim() !== "")
     : ["RED Cinema Rig", "Sony FX3", "Drone 4K", "Pro Shotgun Mic"];
 
   return (
@@ -217,7 +217,7 @@ export default async function HomePage() {
               </p>
 
               <ul className="space-y-3">
-                {gearArray.map((gearItem, idx) => (
+                {gearArray.map((gearItem: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-3 text-sm text-zinc-800 dark:text-zinc-200">
                     <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                     <span>{gearItem}</span>

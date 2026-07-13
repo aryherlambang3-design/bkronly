@@ -12,7 +12,7 @@ export default async function DashboardPage() {
     ...rawProfile,
   };
 
-  const items = rawItems.map((item) => ({
+  const items = rawItems.map((item: any) => ({
     ...item,
     createdAt: new Date(item.createdAt),
   }));
