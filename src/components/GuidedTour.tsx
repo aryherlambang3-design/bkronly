@@ -163,17 +163,30 @@ export default function GuidedTour() {
     completeTour();
   };
 
-  // Drag handlers
+  // Drag handlers (Desktop only)
   const handleMouseDown = (e: React.MouseEvent) => {
+    // Only enable drag on desktop (window width >= 768px)
+    if (window.innerWidth < 768) return;
+    
+    // Get current position of tooltip
+    const rect = e.currentTarget.getBoundingClientRect();
     setIsDragging(true);
     setDragStart({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
     });
+    
+    // Set initial position if not set
+    if (!position.x && !position.y) {
+      setPosition({
+        x: rect.left,
+        y: rect.top,
+      });
+    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (isDragging) {
+    if (isDragging && window.innerWidth >= 768) {
       setPosition({
         x: e.clientX - dragStart.x,
         y: e.clientY - dragStart.y,
@@ -185,33 +198,10 @@ export default function GuidedTour() {
     setIsDragging(false);
   };
 
-  // Touch handlers for mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setIsDragging(true);
-    setDragStart({
-      x: touch.clientX - position.x,
-      y: touch.clientY - position.y,
-    });
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (isDragging) {
-      const touch = e.touches[0];
-      setPosition({
-        x: touch.clientX - dragStart.x,
-        y: touch.clientY - dragStart.y,
-      });
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
+      // Only on desktop
+      if (isDragging && window.innerWidth >= 768) {
         setPosition({
           x: e.clientX - dragStart.x,
           y: e.clientY - dragStart.y,
@@ -264,24 +254,21 @@ export default function GuidedTour() {
       {/* Very Light Overlay - Almost invisible, homepage stays clear */}
       <div className="fixed inset-0 bg-black/10 z-[999]" />
 
-      {/* Tour Tooltip - Draggable & Responsive */}
+      {/* Tour Tooltip - Draggable on Desktop only, Fixed on Mobile */}
       <div 
         className="fixed z-[1000] w-full px-4 sm:max-w-md"
         style={{
           left: position.x ? `${position.x}px` : '50%',
           top: position.y ? `${position.y}px` : '50%',
           transform: position.x || position.y ? 'none' : 'translate(-50%, -50%)',
-          cursor: isDragging ? 'grabbing' : 'grab',
+          cursor: isDragging ? 'grabbing' : undefined, // Only show cursor on desktop
         }}
       >
         <div 
-          className="bg-white/90 dark:bg-zinc-900/70 backdrop-blur-xl rounded-2xl shadow-2xl border-2 border-emerald-500 overflow-hidden select-none"
+          className="bg-white/90 dark:bg-zinc-900/70 backdrop-blur-xl rounded-2xl shadow-2xl border-2 border-emerald-500 overflow-hidden select-none md:cursor-grab md:active:cursor-grabbing"
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           {/* Progress Bar */}
           <div className="h-1.5 bg-zinc-200 dark:bg-zinc-800">
@@ -295,9 +282,9 @@ export default function GuidedTour() {
           <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
             {/* Header */}
             <div className="flex items-start justify-between">
-              <div className="flex-1 cursor-grab active:cursor-grabbing touch-none">
+              <div className="flex-1 md:cursor-grab md:active:cursor-grabbing">
                 <div className="text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1 flex items-center gap-2">
-                  <span className="text-zinc-400 dark:text-zinc-500">☰</span>
+                  <span className="hidden md:inline text-zinc-400 dark:text-zinc-500">☰</span>
                   Step {currentStep + 1} of {tourSteps.length}
                 </div>
                 <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-white">
