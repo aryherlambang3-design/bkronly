@@ -6,6 +6,7 @@ import {
   savePortfolioItem,
   deletePortfolioItem,
 } from "@/app/actions";
+import MultipleImageInput from "@/components/MultipleImageInput";
 import {
   Save,
   Plus,
@@ -37,6 +38,8 @@ interface ProfileSettings {
   heroImageUrl: string;
   instagramUrl: string;
   youtubeUrl: string;
+  tiktokUrl: string;
+  linkedinUrl: string;
   email: string;
   location: string;
   gearList: string;
@@ -57,6 +60,7 @@ interface PortfolioItem {
   title: string;
   description: string;
   imageUrl: string;
+  images?: string[]; // New: Multiple images support
   videoUrl: string | null;
   category: string;
   locationShot: string;
@@ -93,6 +97,7 @@ export default function DashboardManager({
     title: "",
     description: "",
     imageUrl: "",
+    images: [],
     videoUrl: "",
     category: "Rainforest",
     locationShot: "",
@@ -116,6 +121,8 @@ export default function DashboardManager({
     formData.append("heroImageUrl", profile.heroImageUrl);
     formData.append("instagramUrl", profile.instagramUrl);
     formData.append("youtubeUrl", profile.youtubeUrl);
+    formData.append("tiktokUrl", profile.tiktokUrl);
+    formData.append("linkedinUrl", profile.linkedinUrl);
     formData.append("email", profile.email);
     formData.append("location", profile.location);
     formData.append("gearList", profile.gearList);
@@ -152,10 +159,15 @@ export default function DashboardManager({
     e.preventDefault();
     clearAlert();
 
-    if (!editingItem.title || !editingItem.description || !editingItem.imageUrl || !editingItem.category) {
+    // Get images array, ensure at least one image
+    const images = editingItem.images && editingItem.images.length > 0 
+      ? editingItem.images 
+      : (editingItem.imageUrl ? [editingItem.imageUrl] : []);
+
+    if (!editingItem.title || !editingItem.description || images.length === 0 || !editingItem.category) {
       setStatus({
         type: "error",
-        message: "Title, description, photo/image URL, and category are required fields.",
+        message: "Title, description, at least one image URL, and category are required fields.",
       });
       return;
     }
@@ -168,7 +180,8 @@ export default function DashboardManager({
     }
     formData.append("title", editingItem.title);
     formData.append("description", editingItem.description);
-    formData.append("imageUrl", editingItem.imageUrl);
+    formData.append("imageUrl", images[0]); // First image as primary
+    formData.append("images", JSON.stringify(images)); // All images as JSON
     formData.append("videoUrl", editingItem.videoUrl || "");
     formData.append("category", editingItem.category);
     formData.append("locationShot", editingItem.locationShot || "Sumatra");
@@ -193,6 +206,7 @@ export default function DashboardManager({
             title: "",
             description: "",
             imageUrl: "",
+            images: [],
             videoUrl: "",
             category: "Rainforest",
             locationShot: "",
@@ -206,6 +220,7 @@ export default function DashboardManager({
             title: "",
             description: "",
             imageUrl: "",
+            images: [],
             videoUrl: "",
             category: "Rainforest",
             locationShot: "",
@@ -250,6 +265,7 @@ export default function DashboardManager({
             title: "",
             description: "",
             imageUrl: "",
+            images: [],
             videoUrl: "",
             category: "Rainforest",
             locationShot: "",
@@ -273,6 +289,7 @@ export default function DashboardManager({
       title: item.title,
       description: item.description,
       imageUrl: item.imageUrl,
+      images: item.images && item.images.length > 0 ? item.images : [item.imageUrl],
       videoUrl: item.videoUrl || "",
       category: item.category,
       locationShot: item.locationShot,
@@ -453,6 +470,28 @@ export default function DashboardManager({
                     onChange={(e) => setProfile({ ...profile, youtubeUrl: e.target.value })}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     placeholder="https://youtube.com/@username"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-400 uppercase">TikTok Profile URL</label>
+                  <input
+                    type="url"
+                    value={profile.tiktokUrl}
+                    onChange={(e) => setProfile({ ...profile, tiktokUrl: e.target.value })}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    placeholder="https://tiktok.com/@username"
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-zinc-400 uppercase">LinkedIn Profile URL</label>
+                  <input
+                    type="url"
+                    value={profile.linkedinUrl}
+                    onChange={(e) => setProfile({ ...profile, linkedinUrl: e.target.value })}
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    placeholder="https://linkedin.com/in/username"
                     required
                   />
                 </div>
@@ -758,6 +797,7 @@ export default function DashboardManager({
                       title: "",
                       description: "",
                       imageUrl: "",
+                      images: [],
                       videoUrl: "",
                       category: "Rainforest",
                       locationShot: "",
@@ -829,16 +869,15 @@ export default function DashboardManager({
                 </div>
               </div>
 
-              {/* Photo Image URL */}
+              {/* Photo Image URLs - Multiple Images Support */}
               <div className="space-y-1.5">
-                <label className="font-semibold text-zinc-400 uppercase block">Photo Image URL</label>
-                <input
-                  type="text"
-                  value={editingItem.imageUrl}
-                  onChange={(e) => setEditingItem({ ...editingItem, imageUrl: e.target.value })}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-sm text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-                  placeholder="Paste photograph image URL here"
-                  required
+                <label className="font-semibold text-zinc-400 uppercase block flex items-center justify-between">
+                  <span>Photo Image URLs</span>
+                  <span className="text-[9px] text-zinc-500 font-normal lowercase">(add multiple for carousel)</span>
+                </label>
+                <MultipleImageInput
+                  images={editingItem.images || []}
+                  onChange={(images) => setEditingItem({ ...editingItem, images, imageUrl: images[0] || "" })}
                 />
               </div>
 

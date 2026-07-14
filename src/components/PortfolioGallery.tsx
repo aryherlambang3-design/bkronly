@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { Search, MapPin, Tag, Film, Camera, X, Play, Heart } from "lucide-react";
+import ImageCarousel from "./ImageCarousel";
 
 interface PortfolioItem {
   id: number;
   title: string;
   description: string;
   imageUrl: string;
+  images?: string[];
   videoUrl: string | null;
   category: string;
   locationShot: string;
@@ -119,19 +121,16 @@ export default function PortfolioGallery({ items }: PortfolioGalleryProps) {
                 onClick={() => setSelectedItem(item)}
                 className="group relative bg-zinc-100 dark:bg-zinc-900/40 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800/80 hover:border-emerald-500 dark:hover:border-emerald-700/60 transition-all duration-300 cursor-pointer flex flex-col hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-950/10"
               >
-                {/* Photo Container */}
+                {/* Photo Container with Carousel */}
                 <div className="aspect-[4/3] w-full bg-zinc-200 dark:bg-zinc-950 relative overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.imageUrl}
+                  <ImageCarousel
+                    images={item.images && item.images.length > 0 ? item.images : [item.imageUrl]}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
                   />
 
                   {/* Featured Tag */}
                   {item.isFeatured && (
-                    <span className="absolute top-3 left-3 bg-emerald-600/90 text-white text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded-md flex items-center gap-1 backdrop-blur-sm">
+                    <span className="absolute top-3 left-3 bg-emerald-600/90 text-white text-[10px] font-bold tracking-wider uppercase px-2 py-1 rounded-md flex items-center gap-1 backdrop-blur-sm z-20">
                       <Heart className="h-3 w-3 fill-white" /> Featured Story
                     </span>
                   )}
@@ -216,11 +215,9 @@ export default function PortfolioGallery({ items }: PortfolioGalleryProps) {
                 </div>
               ) : (
                 <div className="w-full bg-zinc-100 dark:bg-zinc-950 relative aspect-[16/10] sm:aspect-video">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={selectedItem.imageUrl}
+                  <ImageCarousel
+                    images={selectedItem.images && selectedItem.images.length > 0 ? selectedItem.images : [selectedItem.imageUrl]}
                     alt={selectedItem.title}
-                    className="w-full h-full object-contain"
                   />
                 </div>
               )}

@@ -10,6 +10,8 @@ export const profileSettings = pgTable("profile_settings", {
   heroImageUrl: text("hero_image_url").notNull(),
   instagramUrl: text("instagram_url").notNull(),
   youtubeUrl: text("youtube_url").notNull(),
+  tiktokUrl: text("tiktok_url").notNull(),
+  linkedinUrl: text("linkedin_url").notNull(),
   email: text("email").notNull(),
   location: text("location").notNull(),
   gearList: text("gear_list").notNull(), // Comma-separated or newline-separated
@@ -29,7 +31,8 @@ export const portfolioItems = pgTable("portfolio_items", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  imageUrl: text("image_url").notNull(),
+  imageUrl: text("image_url").notNull(), // Kept for backwards compatibility
+  images: text("images").array().default([]).notNull(), // New: Multiple images support
   videoUrl: text("video_url"), // Optional youtube embed or video link
   category: text("category").notNull(), // e.g. "Rainforest", "Ocean", "Savannah", "Behind the Scenes"
   locationShot: text("location_shot").notNull(), // where it was taken

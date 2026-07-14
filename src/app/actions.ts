@@ -18,6 +18,8 @@ export async function updateProfileSettings(formData: FormData) {
     const heroImageUrl = formData.get("heroImageUrl") as string;
     const instagramUrl = formData.get("instagramUrl") as string;
     const youtubeUrl = formData.get("youtubeUrl") as string;
+    const tiktokUrl = formData.get("tiktokUrl") as string;
+    const linkedinUrl = formData.get("linkedinUrl") as string;
     const email = formData.get("email") as string;
     const location = formData.get("location") as string;
     const gearList = formData.get("gearList") as string;
@@ -47,6 +49,8 @@ export async function updateProfileSettings(formData: FormData) {
         heroImageUrl: heroImageUrl || "",
         instagramUrl: instagramUrl || "",
         youtubeUrl: youtubeUrl || "",
+        tiktokUrl: tiktokUrl || "",
+        linkedinUrl: linkedinUrl || "",
         email: email || "",
         location: location || "",
         gearList: gearList || "",
@@ -80,6 +84,7 @@ export async function savePortfolioItem(formData: FormData) {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const imageUrl = formData.get("imageUrl") as string;
+    const imagesJson = formData.get("images") as string | null;
     const videoUrl = formData.get("videoUrl") as string | null;
     const category = formData.get("category") as string;
     const locationShot = formData.get("locationShot") as string;
@@ -90,10 +95,23 @@ export async function savePortfolioItem(formData: FormData) {
       return { success: false, error: "Title, description, photo URL, and category are required." };
     }
 
+    // Parse images array from JSON string
+    let images: string[] = [];
+    if (imagesJson) {
+      try {
+        images = JSON.parse(imagesJson);
+      } catch {
+        images = [imageUrl]; // Fallback to single image
+      }
+    } else {
+      images = [imageUrl]; // Fallback to single image
+    }
+
     const payload = {
       title,
       description,
-      imageUrl,
+      imageUrl, // Keep for backwards compatibility
+      images, // New: Array of image URLs
       videoUrl: videoUrl || "",
       category,
       locationShot: locationShot || "",

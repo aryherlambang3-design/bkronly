@@ -2,7 +2,8 @@ import { getProfileSettings, getPortfolioItems } from "@/db/utils";
 import PortfolioGallery from "@/components/PortfolioGallery";
 import Header from "@/components/Header";
 import ContactForm from "@/components/ContactForm";
-import { InstagramIcon, YoutubeIcon } from "@/components/SocialIcons";
+import GuidedTour from "@/components/GuidedTour";
+import { InstagramIcon, YoutubeIcon, TikTokIcon, LinkedInIcon } from "@/components/SocialIcons";
 import {
   Mail,
   MapPin,
@@ -11,7 +12,9 @@ import {
   Cpu,
   Tv,
   ExternalLink,
+  ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +29,10 @@ export default async function HomePage() {
     createdAt: new Date(item.createdAt),
   }));
 
+  // Limit to 6 items for homepage
+  const homePageItems = items.slice(0, 6);
+  const hasMoreItems = items.length > 6;
+
   // Parse gear list into array
   const gearArray = profile.gearList
     ? profile.gearList.split("\n").filter((g: string) => g.trim() !== "")
@@ -33,6 +40,9 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 selection:bg-emerald-600 selection:text-white font-sans">
+      
+      {/* GUIDED TOUR */}
+      <GuidedTour />
       
       {/* HEADER NAVBAR */}
       <Header profileName={profile.name} />
@@ -130,17 +140,30 @@ export default async function HomePage() {
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest block">Expeditions Logbook</span>
             <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 dark:text-white">Wildlife Photography & Films</h2>
             <p className="text-zinc-600 dark:text-zinc-400 max-w-xl text-sm leading-relaxed">
-              Real high-resolution snapshots and film sequences captured deep within national parks. Filter by category, search specific tags, or click on any card to view detailed expedition notes and video clips.
+              Featured high-resolution snapshots and film sequences captured deep within national parks. Browse latest expeditions or view the complete archive.
             </p>
           </div>
           <div className="mt-4 md:mt-0 flex items-center justify-center gap-1.5 bg-zinc-100 dark:bg-zinc-900/80 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
             <Layers className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-            <span>Total Logged: <b>{items.length}</b> Entries</span>
+            <span>Showing: <b>{homePageItems.length}</b> of <b>{items.length}</b></span>
           </div>
         </div>
 
-        {/* PORTFOLIO GALLERY COMPONENT */}
-        <PortfolioGallery items={items} />
+        {/* PORTFOLIO GALLERY COMPONENT - Limited to 6 items */}
+        <PortfolioGallery items={homePageItems} />
+
+        {/* VIEW MORE BUTTON - Only show if there are more than 6 items */}
+        {hasMoreItems && (
+          <div className="flex justify-center pt-8">
+            <Link
+              href="/expeditions"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg shadow-emerald-900/30 group"
+            >
+              <span>View All {items.length} Expeditions</span>
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* BIOGRAPHY & GEAR SECTION */}
@@ -183,20 +206,20 @@ export default async function HomePage() {
 
               <div className="grid grid-cols-2 gap-4 pt-2 border-t border-zinc-200 dark:border-zinc-800/80">
                 <a
-                  href={profile.instagramUrl}
+                  href={profile.tiktokUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-zinc-100 dark:bg-zinc-950 hover:bg-zinc-200 dark:hover:bg-zinc-800 py-3 rounded-xl text-center text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800 transition-all flex items-center justify-center gap-1.5"
                 >
-                  <InstagramIcon className="h-4 w-4" /> @fikri.muhammd_
+                  <TikTokIcon className="h-4 w-4" /> TikTok
                 </a>
                 <a
-                  href={profile.youtubeUrl}
+                  href={profile.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-zinc-100 dark:bg-zinc-950 hover:bg-zinc-200 dark:hover:bg-zinc-800 py-3 rounded-xl text-center text-xs font-semibold text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white border border-zinc-200 dark:border-zinc-800 transition-all flex items-center justify-center gap-1.5"
                 >
-                  <YoutubeIcon className="h-4 w-4 text-red-500" /> @fikriiimuhammad
+                  <LinkedInIcon className="h-4 w-4 text-blue-600" /> LinkedIn
                 </a>
               </div>
             </div>
