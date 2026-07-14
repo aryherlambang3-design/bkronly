@@ -18,6 +18,8 @@ export async function getProfileSettings() {
       bioFull: "Fikri Muhammad is an Indonesian wildlife documentary filmmaker, conservationist, and visual storyteller. Based in Indonesia, Fikri travels to the most remote corners of the archipelago—from the dense canopy of the Sumatran rainforest to the underwater currents of Komodo and Raja Ampat. Armed with patience, extreme endurance, and professional cinema rigs, he documents the lives of endangered species like the Sumatran Orangutan, Javan Rhino, and Komodo Dragon.\n\nWith millions of views on YouTube and a deeply engaged community on Instagram, his mission is to bridge the gap between human curiosity and ecological preservation. His work highlights not only the beauty of wildlife but also the critical threats they face due to habitat loss and climate change. Through cinematic storytelling, he hopes to inspire the next generation to protect our planet's remaining wild sanctuaries.",
       profileImageUrl: "https://images.pexels.com/photos/33845211/pexels-photo-33845211.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=600&w=600",
       heroImageUrl: "https://images.pexels.com/photos/18886383/pexels-photo-18886383.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1080&w=1920",
+      instagramUrl: "https://www.instagram.com/fikri.muhammd_/",
+      youtubeUrl: "https://youtube.com/@fikriiimuhammad",
       tiktokUrl: "https://www.tiktok.com/@fikrimuhammd_",
       linkedinUrl: "https://www.linkedin.com/in/fikri-m-310b25140/",
       email: "fikri.documentary@gmail.com",

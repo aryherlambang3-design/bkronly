@@ -7,9 +7,13 @@ export default async function DashboardPage() {
   const rawProfile = await getProfileSettings();
   const rawItems = await getPortfolioItems();
 
-  // Convert schema objects to matching formats
+  // Ensure all required fields exist with defaults
   const profile = {
     ...rawProfile,
+    instagramUrl: rawProfile.instagramUrl || "https://www.instagram.com/fikri.muhammd_/",
+    youtubeUrl: rawProfile.youtubeUrl || "https://youtube.com/@fikriiimuhammad",
+    tiktokUrl: rawProfile.tiktokUrl || "https://www.tiktok.com/@fikrimuhammd_",
+    linkedinUrl: rawProfile.linkedinUrl || "https://www.linkedin.com/in/fikri-m-310b25140/",
   };
 
   const items = rawItems.map((item: any) => ({
